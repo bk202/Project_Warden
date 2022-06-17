@@ -1,0 +1,8 @@
+{
+    "FACENET_MODEL_PATH": "./keras-facenet/model/facenet_keras.h5",
+    "SVM_MODEL_PATH": "./sklearn_svm.sav",
+    "TRAINING_SET_PATH": "./5-celebrity-faces-dataset/train/",
+    "VALIDATE_SET_PATH": "./5-celebrity-faces-dataset/val/",
+    "COMPRESSED_FACE_IMAGE_DATASET_PATH": "5-celebrity-faces-dataset.npz",
+    "COMPRESSED_FACE_EMBEDDING_PATH": "5-celebrity-faces-embeddings.npz"
+}

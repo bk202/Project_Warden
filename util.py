@@ -1,10 +1,12 @@
-
-# pre-process image
 import mtcnn
 import PIL.Image as Image
 import numpy
 import os
-from keras.models import load_model
+import json
+
+def LoadConfig(filePath):
+    with open(filePath, "r") as f:
+        return json.load(f)
 
 def LoadImage(imagePath):
     image = Image.open(imagePath)
@@ -70,25 +72,23 @@ def LoadDataset(directory):
 
     return numpy.asarray(x), numpy.asarray(y)
 
-def GenerateDataset(
-        trainingSet = './5-celebrity-faces-dataset/train/',
-        validateSet = './5-celebrity-faces-dataset/val/',
-        outputFile = '5-celebrity-faces-dataset.npz'
-):
+def GenerateEmbedding(model, facePixels):
     """
-    load training set and test set and save into .npz file
-    :return: None
+    :param model: The loaded Keras FaceNet model
+    :param facePixels: face pixels in 2d numpy array
+    :return: the embedding of the face pixels
     """
-    trainX, trainY = LoadDataset(trainingSet)
-    print(f'trainX: {trainX.shape}, trainY: {trainY.shape}')
 
-    validateX, validateY = LoadDataset(validateSet)
-    print(f'validateX: {validateX.shape}, validateY: {validateY.shape}')
-    numpy.savez_compressed(outputFile, trainX, trainY, validateX, validateY)
+    # Standardize the face pixels value for FaceNet input
+    facePixels = facePixels.astype('float32')
+    mean, std = facePixels.mean(), facePixels.std()
+    facePixels = (facePixels - mean) / std
 
-    return None
+    # FaceNet performs prediction on batched images
+    # insert a new dimension into facePixels to make a batch of 1 image
+    samples = numpy.expand_dims(facePixels, axis=0)
 
-def GenerateEmbeddings(modelPath = './keras-facenet/model/facenet_keras.h5'):
-    model = load_model('./keras-facenet/model/facenet_keras.h5')
-    print(model.inputs)
-    print(model.outputs)
+    # make prediction to get embeddings
+    embedding = model.predict(samples)[0]
+    return embedding
+
