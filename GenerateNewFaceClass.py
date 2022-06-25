@@ -45,6 +45,7 @@ if __name__ == '__main__':
         trainingPath = os.path.join(config['TRAINING_SET_PATH'], className)
         if (os.path.exists(trainingPath)):
             os.rmdir(trainingPath)
+        os.mkdir(trainingPath)
 
         index = 0
         for img in trainingSet:
@@ -56,6 +57,7 @@ if __name__ == '__main__':
         validatePath = os.path.join(config['VALIDATE_SET_PATH'], className)
         if (os.path.exists(validatePath)):
             os.rmdir(validatePath)
+        os.mkdir(validatePath)
 
         index = 0
         for img in validateSet:
