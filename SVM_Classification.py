@@ -3,8 +3,21 @@ import numpy
 import sklearn.preprocessing
 import sklearn.metrics
 import pickle
-from matplotlib import pyplot
+import os
 from keras.models import load_model
+
+def ClassifyFaceEmbedding(svmModel, faceEmbedding):
+    """
+    :param svmModel: The SVM model which performs classification based on face embedding
+    :param faceEmbedding: the input face embedding
+    :return: returns the predicted class name and confidence (out of 100)
+    """
+    # predict the face based on random selection
+    samples = numpy.expand_dims(faceEmbedding, axis=0)
+    yhat_class = svmModel.predict(samples)[0]
+    yhat_prob = svmModel.predict_proba(samples) * 100
+
+    return yhat_class, yhat_prob
 
 if __name__ == '__main__':
     config = util.LoadConfig('./config.json')
@@ -26,23 +39,23 @@ if __name__ == '__main__':
     validateY = out_encoder.transform(validateY_faces)
     print(f'Embeddings normalized, validateY: {validateY.shape}')
 
-    selection = numpy.random.choice([i for i in range(validateX_faces.shape[0])])
-    random_face_pixels = validateX_faces[selection]
-    random_face_gt_name = validateY_faces[selection]
-    random_face_embeddings = util.GenerateEmbedding(faceNetModel, random_face_pixels)
+    for image in os.listdir(config['FACES_CLASSIFICATION_DIRECTORY']):
+        imagePath = os.path.join(config['FACES_CLASSIFICATION_DIRECTORY'], image)
 
-    # predict the face based on random selection
-    samples = numpy.expand_dims(random_face_embeddings, axis=0)
-    yhat_class = svmModel.predict(samples)[0]
-    yhat_prob = svmModel.predict_proba(samples) * 100
+        print(f'image path: {imagePath}')
 
-    # convert prediction into class name
-    yhat_class_name = out_encoder.inverse_transform([yhat_class])
+        image = util.LoadImage(imagePath)
 
-    print(f'Predicted class name: {yhat_class_name} random_class_gt: {random_face_gt_name}, confidence: {yhat_prob}')
+        # assume there is only 1 face in image
+        facePixels = util.ExtractFacesFromImage(image)[0]
+        faceEmbedding = util.GenerateEmbedding(faceNetModel, facePixels)
 
-    # plot for visual
-    pyplot.imshow(random_face_pixels)
-    title = f'Predicted class name: {yhat_class_name} random_class_gt: {random_face_gt_name}, confidence: {yhat_prob}'
-    pyplot.title(title)
-    pyplot.show()
+        # predict the face based on random selection
+        yhat_class, yhat_prob = ClassifyFaceEmbedding(svmModel, faceEmbedding)
+
+        # plot for visual
+        yhat_class_name = out_encoder.inverse_transform([yhat_class])
+
+        print(f'prediction: {yhat_class_name}, confidencee: {yhat_prob}')
+        confidence = max(yhat_prob[0])
+        util.DisplayImageWithPrediction(facePixels, yhat_class_name, confidence)

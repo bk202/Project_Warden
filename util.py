@@ -3,6 +3,7 @@ import PIL.Image as Image
 import numpy
 import os
 import json
+from matplotlib import pyplot
 
 def LoadConfig(filePath):
     with open(filePath, "r") as f:
@@ -48,30 +49,6 @@ def ExtractFacesFromPath(path):
 
     return faces
 
-def LoadDataset(directory):
-    """
-    :param directory: string which indicates the dataset directory
-    :return: x: list of faces converted to pixel, y: list of class label in string
-    """
-    x, y = list(), list()
-
-    for subDir in os.listdir(directory):
-        path = os.path.join(directory, subDir)
-
-        if (not os.path.isdir(path)):
-            continue
-
-        faces = ExtractFacesFromPath(path)
-        labels = [subDir for _ in range(len(faces))]
-
-        # summarize progress
-        print(f'> Loaded {len(faces)} faces for class {subDir}')
-
-        x.extend(faces)
-        y.extend(labels)
-
-    return numpy.asarray(x), numpy.asarray(y)
-
 def GenerateEmbedding(model, facePixels):
     """
     :param model: The loaded Keras FaceNet model
@@ -92,3 +69,14 @@ def GenerateEmbedding(model, facePixels):
     embedding = model.predict(samples)[0]
     return embedding
 
+def DisplayImageWithPrediction(image, prediction, probability):
+    """
+    :param image: face image
+    :param prediction: the predicted class name
+    :param probability: confidence of prediction
+    :return:
+    """
+    pyplot.imshow(image)
+    title = f'Predicted class name: {prediction}, confidence: {probability}%'
+    pyplot.title(title)
+    pyplot.show()

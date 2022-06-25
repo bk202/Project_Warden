@@ -1,8 +1,12 @@
 {
     "FACENET_MODEL_PATH": "./keras-facenet/model/facenet_keras.h5",
     "SVM_MODEL_PATH": "./sklearn_svm.sav",
-    "TRAINING_SET_PATH": "./5-celebrity-faces-dataset/train/",
-    "VALIDATE_SET_PATH": "./5-celebrity-faces-dataset/val/",
-    "COMPRESSED_FACE_IMAGE_DATASET_PATH": "5-celebrity-faces-dataset.npz",
-    "COMPRESSED_FACE_EMBEDDING_PATH": "5-celebrity-faces-embeddings.npz"
+    "TRAINING_SET_PATH": "./dataset/train/",
+    "VALIDATE_SET_PATH": "./dataset/val/",
+    "COMPRESSED_FACE_IMAGE_DATASET_PATH": "faces-dataset.npz",
+    "COMPRESSED_FACE_EMBEDDING_PATH": "faces-embeddings.npz",
+    "FACE_CLASS_VIDEO_DIRECTORY": "./input_videos",
+    "VIDEO_SAMPLING_FREQUENCY": 5,
+    "FACES_CLASSIFICATION_DIRECTORY": "./classification",
+    "FACES_CLASSIFICATION_OUTPUT": "./classification_output.txt"
 }
