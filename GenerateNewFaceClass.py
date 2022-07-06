@@ -2,6 +2,7 @@ import util
 import cv2
 import os
 import numpy
+import shutil
 
 def GetClassName(fileName):
     return fileName.split('.')[0]
@@ -44,7 +45,7 @@ if __name__ == '__main__':
 
         trainingPath = os.path.join(config['TRAINING_SET_PATH'], className)
         if (os.path.exists(trainingPath)):
-            os.rmdir(trainingPath)
+            shutil.rmtree(trainingPath)
         os.mkdir(trainingPath)
 
         index = 0
@@ -56,7 +57,7 @@ if __name__ == '__main__':
 
         validatePath = os.path.join(config['VALIDATE_SET_PATH'], className)
         if (os.path.exists(validatePath)):
-            os.rmdir(validatePath)
+            shutil.rmtree(validatePath)
         os.mkdir(validatePath)
 
         index = 0

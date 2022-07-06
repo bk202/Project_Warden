@@ -2,16 +2,17 @@ import util
 import numpy
 from keras.models import load_model
 import sklearn.preprocessing
+import Config
 
 if __name__ == '__main__':
-    config = util.LoadConfig('./config.json')
+    config = Config.Configurations()
 
     # load training and validation set
-    data = numpy.load(config['COMPRESSED_FACE_IMAGE_DATASET_PATH'])
+    data = numpy.load(config.COMPRESSED_FACE_IMAGE_DATASET_PATH)
     trainX, trainY, validateX, validateY = data['arr_0'], data['arr_1'], data['arr_2'], data['arr_3']
     print(f'Dataset loaded, trainX: {trainX.shape}, trainY: {trainY.shape}, validateX: {validateX.shape}, validateY: {validateY.shape}')
 
-    model = load_model(config['FACENET_MODEL_PATH'])
+    model = load_model(config.FACENET_MODEL_PATH)
     trainingEmbeddings = list()
     validateEmbeddings = list()
 
@@ -30,12 +31,12 @@ if __name__ == '__main__':
     trainingEmbeddings = in_encoder.transform(trainingEmbeddings)
     validateEmbeddings = in_encoder.transform(validateEmbeddings)
 
-    # convert labels into integers
-    out_encoder = sklearn.preprocessing.LabelEncoder()
-    out_encoder.fit(trainY)
-    trainY = out_encoder.transform(trainY)
-    validateY = out_encoder.transform(validateY)
+    # # convert labels into integers
+    # out_encoder = sklearn.preprocessing.LabelEncoder()
+    # out_encoder.fit(trainY)
+    # trainY = out_encoder.transform(trainY)
+    # validateY = out_encoder.transform(validateY)
     print(f'Embeddings normalized, trainX: {trainX.shape}, trainY: {trainY.shape}, validateX: {validateX.shape}, validateY: {validateY.shape}')
 
     print(f'trainingEmbeddings: {trainingEmbeddings.shape}, validateEmbeddings: {validateEmbeddings.shape}')
-    numpy.savez_compressed(config['COMPRESSED_FACE_EMBEDDING_PATH'], trainingEmbeddings, trainY, validateEmbeddings, validateY)
+    numpy.savez_compressed(config.COMPRESSED_FACE_EMBEDDING_PATH, trainingEmbeddings, trainY, validateEmbeddings, validateY)

@@ -4,6 +4,7 @@ import numpy
 import os
 import json
 from matplotlib import pyplot
+import sklearn.svm
 
 def LoadConfig(filePath):
     with open(filePath, "r") as f:
@@ -69,14 +70,60 @@ def GenerateEmbedding(model, facePixels):
     embedding = model.predict(samples)[0]
     return embedding
 
-def DisplayImageWithPrediction(image, prediction, probability):
+def DisplayImageWithPrediction(image, title):
     """
     :param image: face image
-    :param prediction: the predicted class name
-    :param probability: confidence of prediction
     :return:
     """
     pyplot.imshow(image)
-    title = f'Predicted class name: {prediction}, confidence: {probability}%'
     pyplot.title(title)
     pyplot.show()
+
+def TrainSVMFromEmbeddings(embeddingsPath):
+    # load training and validation set
+    data = numpy.load(embeddingsPath)
+    trainX, trainY, validateX, validateY = data['arr_0'], data['arr_1'], data['arr_2'], data['arr_3']
+    print(
+        f'Embeddings loaded, trainX: {trainX.shape}, trainY: {trainY.shape}, validateX: {validateX.shape}, validateY: {validateY.shape}')
+
+    # fit SVM for classification
+    model = sklearn.svm.SVC(kernel='linear', probability=True)
+    model.fit(trainX, trainY)
+    return model
+
+
+def ClassifyFaceEmbedding(nnModel, faceEmbedding, config):
+    """
+    :param svmModel: The NN model which performs classification based on face embedding
+    :param faceEmbedding: the input face embedding
+    :return: returns the data points stored in the NN clusters with distances lower than the set threshold
+    """
+
+    embedding = faceEmbedding.reshape(1, -1)
+
+    '''
+    since this is unsupervised learning, inds returns the indices of the nearest neighbors known
+    in it's training set.
+
+    We need to map each training point to it's specific class in order to interpret which class the prediction
+    corresponds to.
+    '''
+    dists, indices = nnModel.kneighbors(X=embedding,
+                                        n_neighbors=config.FACES_CLASSES_COUNT,
+                                        return_distance=True)
+    dists = dists[0]
+    indices = indices[0]
+
+    # filter out clusters that are below distance threshold of 0.6
+    threshold = 1.0
+    predictions = list()
+    predictions_distances = list()
+
+    for i in range(0, len(indices)):
+        if (dists[i] > threshold):
+            continue
+
+        predictions.append(indices[i])
+        predictions_distances.append([dists[i]])
+
+    return predictions, predictions_distances

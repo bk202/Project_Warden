@@ -1,6 +1,5 @@
 import util
 import numpy
-import sklearn.preprocessing
 import sklearn.svm
 import sklearn.metrics
 import pickle

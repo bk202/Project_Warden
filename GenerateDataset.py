@@ -1,6 +1,7 @@
 import util
 import numpy
 import os
+import Config
 
 def LoadDataset(directory):
     """
@@ -41,7 +42,8 @@ def GenerateDataset(trainingSet, validateSet, outputFile):
     return None
 
 if __name__ == '__main__':
-    config = util.LoadConfig('./config.json')
-    GenerateDataset(trainingSet=config['TRAINING_SET_PATH'],
-                    validateSet=config['VALIDATE_SET_PATH'],
-                    outputFile=config['COMPRESSED_FACE_IMAGE_DATASET_PATH'])
+    # config = util.LoadConfig('./config.json')
+    config = Config.Configurations()
+    GenerateDataset(trainingSet=config.TRAINING_SET_PATH,
+                    validateSet=config.VALIDATE_SET_PATH,
+                    outputFile=config.COMPRESSED_FACE_IMAGE_DATASET_PATH)

@@ -25,7 +25,7 @@ if __name__ == '__main__':
     # load FaceNet model
     faceNetModel = load_model(config['FACENET_MODEL_PATH'])
 
-    # load SVM model from disk
+    # # load SVM model from disk
     svmModel = pickle.load(open(config['SVM_MODEL_PATH'], 'rb'))
 
     # load training and validation data set
