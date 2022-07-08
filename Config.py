@@ -5,7 +5,6 @@ class Configurations:
         config = util.LoadConfig('./config.json')
 
         self.FACENET_MODEL_PATH = config['FACENET_MODEL_PATH']
-        self.SVM_MODEL_PATH = config['SVM_MODEL_PATH']
         self.NN_MODEL_PATH = config['NN_MODEL_PATH']
         self.TRAINING_SET_PATH = config['TRAINING_SET_PATH']
         self.VALIDATE_SET_PATH = config['VALIDATE_SET_PATH']

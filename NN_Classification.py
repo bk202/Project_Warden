@@ -25,8 +25,11 @@ def ClassifyFaceEmbedding(nnModel, faceEmbedding, trainY, config):
     predicted_indexes, prediction_distances = util.ClassifyFaceEmbedding(nnModel, faceEmbedding, config)
     predicted_labels = [trainY[id] for id in predicted_indexes]
 
-    print(f'Predictions: {predicted_labels}, distances: {prediction_distances}')
-    return predicted_labels[0], prediction_distances[0]
+    if (len(predicted_labels) == 0):
+        return 'unknown', float('INF')
+    else:
+        print(f'Predictions: {predicted_labels}, distances: {prediction_distances}')
+        return predicted_labels[0], prediction_distances[0]
 
 if __name__ == '__main__':
     config = Config.Configurations()

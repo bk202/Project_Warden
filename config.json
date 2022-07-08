@@ -1,6 +1,5 @@
 {
     "FACENET_MODEL_PATH": "./keras-facenet/model/facenet_keras.h5",
-    "SVM_MODEL_PATH": "./sklearn_svm.sav",
     "NN_MODEL_PATH": "./sklearn_nn.pkl",
     "TRAINING_SET_PATH": "./dataset/train/",
     "VALIDATE_SET_PATH": "./dataset/val/",

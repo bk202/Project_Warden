@@ -12,6 +12,13 @@ def EvaluateModel(model, validateX, validateY, trainY, config):
         x, gt_y = validateX[i], validateY[i]
 
         predicted_indexes, _ = util.ClassifyFaceEmbedding(model, x, config)
+
+        # there may be cases where all predicted indexes are too far from current dataset
+        # in this case, simply mark the mean as 0% and continue
+        if (len(predicted_indexes) > 0):
+            p_at_k[i] = numpy.mean([0])
+            continue
+
         predicted_labels = [trainY[id] for id in predicted_indexes]
 
         # validate the labels, if the predicted labels matches the gt label, mark the predicted index as 1, else 0

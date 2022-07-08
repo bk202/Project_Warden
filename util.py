@@ -115,7 +115,7 @@ def ClassifyFaceEmbedding(nnModel, faceEmbedding, config):
     indices = indices[0]
 
     # filter out clusters that are below distance threshold of 0.6
-    threshold = 1.0
+    threshold = 0.5
     predictions = list()
     predictions_distances = list()
 
