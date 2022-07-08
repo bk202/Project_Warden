@@ -1,11 +1,10 @@
 import util
 import numpy
-import sklearn.preprocessing
-import sklearn.metrics
 import pickle
 import os
 from keras.models import load_model
 import Config
+import shutil
 
 def Get_GroundTruth_labels(config):
     # load training and validation set
@@ -44,20 +43,29 @@ if __name__ == '__main__':
     nnModel = pickle.load(open(config.NN_MODEL_PATH, 'rb'))
 
     for image in os.listdir(config.FACES_CLASSIFICATION_DIRECTORY):
-        imagePath = os.path.join(config.FACES_CLASSIFICATION_DIRECTORY, image)
-
-        print(f'image path: {imagePath}')
-
-        image = util.LoadImage(imagePath)
+        image_path = os.path.join(config.FACES_CLASSIFICATION_DIRECTORY, image)
+        loaded_image = util.LoadImage(image_path)
 
         # assume there is only 1 face in image
-        facePixels = util.ExtractFacesFromImage(image)[0]
-        faceEmbedding = util.GenerateEmbedding(faceNetModel, facePixels)
+        face_pixels = util.ExtractFacesFromImage(loaded_image)[0]
+        face_embedding = util.GenerateEmbedding(faceNetModel, face_pixels)
 
         # predict the face based on random selection
-        predicted_label, prediction_distance = ClassifyFaceEmbedding(nnModel, faceEmbedding, trainY, config)
+        predicted_label, prediction_distance = ClassifyFaceEmbedding(nnModel, face_embedding, trainY, config)
 
-        # plot for visual
-        title = f'prediction: {predicted_label}, distance: {prediction_distance}'
-        print(title)
-        util.DisplayImageWithPrediction(facePixels, title)
+        if config.VERBOSITY == 1:
+            # plot for visual
+            title = f'prediction: {predicted_label}, distance: {prediction_distance}'
+            print(title)
+            util.DisplayImageWithPrediction(face_pixels, title)
+
+        # save image to records and remove image from classification path
+        # append prediction result to output file
+        with open(config.FACES_CLASSIFICATION_OUTPUT, 'a+') as f:
+            line = f'{image} {predicted_label} {prediction_distance}\n'
+            f.write(line)
+            f.close()
+
+        record_path = os.path.join(config.FACES_CLASSIFICATION_RECORD_DIRECTORY, image)
+        shutil.copy(image_path, record_path)
+        os.remove(image_path)

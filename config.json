@@ -1,4 +1,5 @@
 {
+    "FACES_CLASSES_COUNT": 6,
     "FACENET_MODEL_PATH": "./keras-facenet/model/facenet_keras.h5",
     "NN_MODEL_PATH": "./sklearn_nn.pkl",
     "TRAINING_SET_PATH": "./dataset/train/",
@@ -7,7 +8,11 @@
     "COMPRESSED_FACE_EMBEDDING_PATH": "faces-embeddings.npz",
     "FACE_CLASS_VIDEO_DIRECTORY": "./input_videos",
     "VIDEO_SAMPLING_FREQUENCY": 2,
-    "FACES_CLASSIFICATION_DIRECTORY": "./classification",
-    "FACES_CLASSIFICATION_OUTPUT": "./classification_output.txt",
-    "FACES_CLASSES_COUNT": 6
+    "FACES_CLASSIFICATION":
+    {
+        "FACES_CLASSIFICATION_DIRECTORY": "./classification",
+        "FACES_CLASSIFICATION_RECORD_DIRECTORY": "./classification_records",
+        "FACES_CLASSIFICATION_OUTPUT": "./classification_output.txt"
+    },
+    "VERBOSITY": 2
 }
