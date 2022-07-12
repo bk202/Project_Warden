@@ -127,3 +127,11 @@ def ClassifyFaceEmbedding(nnModel, faceEmbedding, config):
         predictions_distances.append([dists[i]])
 
     return predictions, predictions_distances
+
+def Get_GroundTruth_labels(config):
+    # load training and validation set
+    embedding_data = numpy.load(config.COMPRESSED_FACE_EMBEDDING_PATH)
+    trainX, trainY = embedding_data['arr_0'], embedding_data['arr_1']
+    print(f'Embeddings loaded, trainX: {trainX.shape}, trainY: {trainY.shape}')
+
+    return trainY

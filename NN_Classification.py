@@ -6,14 +6,6 @@ from keras.models import load_model
 import Config
 import shutil
 
-def Get_GroundTruth_labels(config):
-    # load training and validation set
-    embedding_data = numpy.load(config.COMPRESSED_FACE_EMBEDDING_PATH)
-    trainX, trainY = embedding_data['arr_0'], embedding_data['arr_1']
-    print(f'Embeddings loaded, trainX: {trainX.shape}, trainY: {trainY.shape}')
-
-    return trainY
-
 def ClassifyFaceEmbedding(nnModel, faceEmbedding, trainY, config):
     """
     :param svmModel: The NN model which performs classification based on face embedding
@@ -37,7 +29,7 @@ if __name__ == '__main__':
     faceNetModel = load_model(config.FACENET_MODEL_PATH)
 
     # load ground truth labels
-    trainY = Get_GroundTruth_labels(config)
+    trainY = util.Get_GroundTruth_labels(config)
 
     # # load SVM model from disk
     nnModel = pickle.load(open(config.NN_MODEL_PATH, 'rb'))

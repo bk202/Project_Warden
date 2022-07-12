@@ -2,17 +2,22 @@
     "FACES_CLASSES_COUNT": 6,
     "FACENET_MODEL_PATH": "./keras-facenet/model/facenet_keras.h5",
     "NN_MODEL_PATH": "./sklearn_nn.pkl",
-    "TRAINING_SET_PATH": "./dataset/train/",
-    "VALIDATE_SET_PATH": "./dataset/val/",
-    "COMPRESSED_FACE_IMAGE_DATASET_PATH": "faces-dataset.npz",
-    "COMPRESSED_FACE_EMBEDDING_PATH": "faces-embeddings.npz",
+    "DATA":
+    {
+        "TRAINING_SET_PATH": "./dataset/train/",
+        "VALIDATE_SET_PATH": "./dataset/val/",
+        "COMPRESSED_FACE_IMAGE_DATASET_PATH": "faces-dataset.npz",
+        "COMPRESSED_FACE_EMBEDDING_PATH": "faces-embeddings.npz"
+    },
     "FACE_CLASS_VIDEO_DIRECTORY": "./input_videos",
     "VIDEO_SAMPLING_FREQUENCY": 2,
     "FACES_CLASSIFICATION":
     {
         "FACES_CLASSIFICATION_DIRECTORY": "./classification",
         "FACES_CLASSIFICATION_RECORD_DIRECTORY": "./classification_records",
-        "FACES_CLASSIFICATION_OUTPUT": "./classification_output.txt"
+        "FACES_CLASSIFICATION_OUTPUT": "./classification_output.txt",
+        "FACES_CLASSIFICATION_NN_DISTANCE_THRESHOLD": 0.5
     },
-    "VERBOSITY": 2
+    "VERBOSITY": 2,
+    "DEMO_INPUT_VIDEO_PATH": "./demo/Joma.MOV"
 }

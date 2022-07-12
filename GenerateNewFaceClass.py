@@ -3,19 +3,20 @@ import cv2
 import os
 import numpy
 import shutil
+import Config
 
 def GetClassName(fileName):
     return fileName.split('.')[0]
 
 if __name__ == '__main__':
-    config = util.LoadConfig('./config.json')
-    samplingFrequency = config['VIDEO_SAMPLING_FREQUENCY']
-    videos = os.listdir(config['FACE_CLASS_VIDEO_DIRECTORY'])
+    config = Config.Configurations()
+    samplingFrequency = config.VIDEO_SAMPLING_FREQUENCY
+    videos = os.listdir(config.FACE_CLASS_VIDEO_DIRECTORY)
     sampleFrames = list()
 
     for video in videos:
         className = GetClassName(video)
-        videoPath = os.path.join(config['FACE_CLASS_VIDEO_DIRECTORY'], video)
+        videoPath = os.path.join(config.FACE_CLASS_VIDEO_DIRECTORY, video)
         samplingCount = 1
 
         cap = cv2.VideoCapture(videoPath, 0)
@@ -43,7 +44,7 @@ if __name__ == '__main__':
         trainingSet = sampleFrames[:mid]
         validateSet = sampleFrames[mid:]
 
-        trainingPath = os.path.join(config['TRAINING_SET_PATH'], className)
+        trainingPath = os.path.join(config.TRAINING_SET_PATH, className)
         if (os.path.exists(trainingPath)):
             shutil.rmtree(trainingPath)
         os.mkdir(trainingPath)
@@ -55,7 +56,7 @@ if __name__ == '__main__':
             cv2.imwrite(img_path, img)
             index += 1
 
-        validatePath = os.path.join(config['VALIDATE_SET_PATH'], className)
+        validatePath = os.path.join(config.VALIDATE_SET_PATH, className)
         if (os.path.exists(validatePath)):
             shutil.rmtree(validatePath)
         os.mkdir(validatePath)
